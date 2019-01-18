@@ -21,5 +21,11 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.zzrq</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
