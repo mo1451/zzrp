@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" native2AsciiForPropertiesFiles="true" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Users" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/batch" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/demo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gateway" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/item" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/item/item_service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/message" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/register" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/starter" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/starter/durid-spring-boot-starter" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/starter/web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/starter/web/web-spring-boot-start" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/starter/web/web-spring-boot-starter-configer" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

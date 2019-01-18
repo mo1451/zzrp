@@ -7,11 +7,16 @@
         <module>register</module>
         <module>gateway</module>
         <module>item</module>
+        <!-- <module>common</module>-->
+        <module>batch</module>
+        <!--<module>starter</module>-->
+        <module>Users</module>
+        <module>message</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.7.RELEASE</version>
+        <version>2.0.8.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com</groupId>
@@ -24,19 +29,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Finchley.RC1</spring-cloud.version>
+        <spring-cloud.version>Finchley.SR2</spring-cloud.version>
         <mybatis.starter.version>1.3.2</mybatis.starter.version>
         <mapper.starter.version>2.0.2</mapper.starter.version>
-        <druid.starter.version>1.1.9</druid.starter.version>
+        <druid.starter.version>1.1.12</druid.starter.version>
         <mysql.version>5.1.32</mysql.version>
         <pageHelper.starter.version>1.2.3</pageHelper.starter.version>
         <fastDFS.client.version>1.26.1-RELEASE</fastDFS.client.version>
         <base.latest.version>0.0.1-SNAPSHOT</base.latest.version>
+        <commons.beanutils.version>1.9.3</commons.beanutils.version>
+        <swagger2.version>2.8.0</swagger2.version>
+        <commons.lang3.version>3.8.1</commons.lang3.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- springCloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -44,6 +51,21 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- commons包 -->
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.beanutils.version}</version>
+            </dependency>
+
+            <!-- 自定义common -->
+            <dependency>
+                <groupId>com.zzrq</groupId>
+                <artifactId>common</artifactId>
+                <version>${base.latest.version}</version>
+            </dependency>
+
             <!-- mybatis启动器 -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -68,21 +90,65 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <!--FastDFS客户端-->
+            <!-- druid数据源 -->
             <dependency>
-                <groupId>com.github.tobato</groupId>
-                <artifactId>fastdfs-client</artifactId>
-                <version>${fastDFS.client.version}</version>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.starter.version}</version>
             </dependency>
+
+            <!-- Swagger2依赖包 -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+
+
+
         </dependencies>
     </dependencyManagement>
 
+    <!-- 添加spring-boot的maven插件 -->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- docker的maven插件，官网：https://github.com/spotify/docker-maven-plugin -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.4.14</version>
+                <configuration>
+                    <!-- 注意imageName一定要是符合正则[a-z0-9-_.]的，否则构建不会成功 -->
+                    <!-- 详见：https://github.com/spotify/docker-maven-plugin    Invalid repository name ... only [a-z0-9-_.] are allowed-->
+                    <imageName>microservice-eureka-demo</imageName>
+
+                    <baseImage>java</baseImage>
+                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -96,5 +162,6 @@
             </snapshots>
         </repository>
     </repositories>
+
 
 </project>

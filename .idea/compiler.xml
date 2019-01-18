@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="batch" />
+        <module name="common" />
+        <module name="gateway" />
+        <module name="item_service" />
+        <module name="message" />
+        <module name="redis-spring-boot-start" />
+        <module name="redis-spring-boot-starter-configer" />
+        <module name="register" />
+        <module name="Users" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="batch" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="demo" target="1.8" />
+      <module name="durid-spring-boot-starter" target="1.8" />
+      <module name="gateway" target="1.8" />
+      <module name="item" target="1.8" />
+      <module name="item_interface" target="1.8" />
+      <module name="item_service" target="1.8" />
+      <module name="message" target="1.8" />
+      <module name="redis" target="1.8" />
+      <module name="redis-spring-boot-start" target="1.8" />
+      <module name="redis-spring-boot-starter-configer" target="1.8" />
+      <module name="register" target="1.8" />
+      <module name="starter" target="1.8" />
+      <module name="Users" target="1.8" />
+      <module name="zzrq" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
