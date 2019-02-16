@@ -4,7 +4,7 @@ spring:
   application:
     name: batch-service
   datasource:
-    url: jdbc:mysql://localhost:3306/base_data
+    url: jdbc:mysql://106.15.182.10:3306/base_data
     username: base_data
     password: base_data
     driver-class-name: com.mysql.jdbc.Driver

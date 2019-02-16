@@ -3,6 +3,7 @@ package com.zzrq.base.dto;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResponseData {
@@ -63,12 +64,26 @@ public class ResponseData {
     }
 
     public void setMessage(String message) {
+        if(!StringUtils.isEmpty(message)) {
+            this.success = false;
+        }
         this.message = message;
     }
 
     public void setRows(List<?> rows) {
         this.rows = rows;
-        setTotal((long) rows.size());
+        if(rows != null) {
+            setTotal((long) rows.size());
+        }
+    }
+
+    public void setOneRow(Object t) {
+        List<Object> rows = new ArrayList<>();
+        if(t != null) {
+            rows.add(t);
+            this.rows = rows;
+            setTotal((long) rows.size());
+        }
     }
 
     public void setSuccess(boolean success) {

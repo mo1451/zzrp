@@ -3,15 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Users/Users.iml" filepath="$PROJECT_DIR$/Users/Users.iml" />
+      <module fileurl="file://$PROJECT_DIR$/auth/auth.iml" filepath="$PROJECT_DIR$/auth/auth.iml" />
       <module fileurl="file://$PROJECT_DIR$/batch/batch.iml" filepath="$PROJECT_DIR$/batch/batch.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/excel/excel.iml" filepath="$PROJECT_DIR$/excel/excel.iml" />
       <module fileurl="file://$PROJECT_DIR$/gateway/gateway.iml" filepath="$PROJECT_DIR$/gateway/gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/item/item.iml" filepath="$PROJECT_DIR$/item/item.iml" />
       <module fileurl="file://$PROJECT_DIR$/item/item_service/item_service.iml" filepath="$PROJECT_DIR$/item/item_service/item_service.iml" />
       <module fileurl="file://$PROJECT_DIR$/message/message.iml" filepath="$PROJECT_DIR$/message/message.iml" />
-      <module fileurl="file://$PROJECT_DIR$/starter/web/redis.iml" filepath="$PROJECT_DIR$/starter/web/redis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/starter/web/web-spring-boot-start/redis-spring-boot-start.iml" filepath="$PROJECT_DIR$/starter/web/web-spring-boot-start/redis-spring-boot-start.iml" />
-      <module fileurl="file://$PROJECT_DIR$/starter/web/web-spring-boot-starter-configer/redis-spring-boot-starter-configer.iml" filepath="$PROJECT_DIR$/starter/web/web-spring-boot-starter-configer/redis-spring-boot-starter-configer.iml" />
       <module fileurl="file://$PROJECT_DIR$/register/register.iml" filepath="$PROJECT_DIR$/register/register.iml" />
       <module fileurl="file://$PROJECT_DIR$/zzrq.iml" filepath="$PROJECT_DIR$/zzrq.iml" />
     </modules>

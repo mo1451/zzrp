@@ -1,6 +1,7 @@
 package com.zzrq.user.service;
 
-import com.zzrq.user.dto.User;
+import com.zzrq.base.dto.ResponseData;
+import com.zzrq.user.dto.SysUser;
 
 import java.util.List;
 
@@ -10,13 +11,21 @@ public interface IUserService {
 
     Boolean sendVerifyCode(String phone);
 
-    Boolean register(User user, String code);
+    Boolean register(SysUser sysUser, String code);
 
-    String checkPassword(User user);
+    ResponseData checkPassword(SysUser sysUser);
 
-    List<User> queryUser(String data, int page, int pageSize);
+    List<SysUser> queryUser(String data, int page, int pageSize);
 
-    String changPassword(User user);
+    String changPassword(SysUser sysUser);
 
     String checkVerifyCode(String phone, String code);
+
+    Boolean add(List<SysUser> sysUsers);
+
+    Boolean change(List<SysUser> sysUsers);
+
+    Boolean delete(List<SysUser> sysUsers);
+
+    List<SysUser> query(SysUser sysUser, int pageNum, int pageSize);
 }

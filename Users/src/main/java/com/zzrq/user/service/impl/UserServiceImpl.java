@@ -1,11 +1,13 @@
 package com.zzrq.user.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.zzrq.base.dto.ResponseData;
 import com.zzrq.base.utils.NumberUtil;
 import com.zzrq.base.utils.RSAUtil;
-import com.zzrq.user.dto.User;
+import com.zzrq.user.dto.SysUser;
 import com.zzrq.user.mapper.UserMapper;
 import com.zzrq.user.service.IUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -13,13 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -46,21 +44,21 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean checkData(String data, Integer type) {
-        User user = new User();
+        SysUser sysUser = new SysUser();
         switch (type) {
             case 1:
-                user.setName(data);
+                sysUser.setName(data);
                 break;
             case 2:
-                user.setEmail(data);
+                sysUser.setEmail(data);
                 break;
             case 3:
-                user.setPhone(data);
+                sysUser.setPhone(data);
                 break;
             default:
-                user.setName(data);
+                sysUser.setName(data);
         }
-        int count = userMapper.selectCount(user);
+        int count = userMapper.selectCount(sysUser);
         return count != 0;
     }
 
@@ -83,8 +81,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean register(User user, String code) {
-        String key = KEY_PREFIX + user.getPhone();
+    public Boolean register(SysUser sysUser, String code) {
+        String key = KEY_PREFIX + sysUser.getPhone();
         // 从redis取出验证码
         String codeCache = this.redisTemplate.opsForValue().get(key);
         // 检查验证码是否正确
@@ -92,18 +90,8 @@ public class UserServiceImpl implements IUserService {
             // 不正确，返回
             return false;
         }
-        user.setId(null);
-        user.setCreateDate(new Date());
-        user.setLastUpdateDate(new Date());
 
-        try {
-            user.setPassword(RSAUtil.encrypt(user.getPassword(), publicKey));
-        } catch (Exception e) {
-            logger.error("密码加密失败，password：{}", user.getPassword(), e);
-            return false;
-        }
-        // 写入数据库
-        boolean boo = this.userMapper.insertSelective(user) == 1;
+        boolean boo = this.add(sysUser);
 
         // 如果注册成功，删除redis中的code
         if (boo) {
@@ -117,31 +105,96 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String checkPassword(User user) {
+    public Boolean add(List<SysUser> sysUsers) {
+        for (SysUser sysUser : sysUsers) {
+            this.add(sysUser);
+        }
+        return true;
+    }
+
+    private Boolean add(SysUser sysUser) {
+        sysUser.setId(null);
+        sysUser.setCreateDate(new Date());
+        sysUser.setLastUpdateDate(new Date());
+        if(StringUtils.isEmpty(sysUser.getPassword())) {
+            sysUser.setPassword("123456");
+        }
+        try {
+            sysUser.setPassword(RSAUtil.encrypt(sysUser.getPassword(), publicKey));
+        } catch (Exception e) {
+            logger.error("密码加密失败，password：{}", sysUser.getPassword(), e);
+            return false;
+        }
+        // 写入数据库
+        this.userMapper.insertSelective(sysUser);
+        return true;
+    }
+
+    @Override
+    public Boolean change(List<SysUser> sysUsers) {
+        for (SysUser sysUser : sysUsers) {
+            if(!StringUtils.isEmpty(sysUser.getPassword())) {
+                try {
+                    sysUser.setPassword(RSAUtil.encrypt(sysUser.getPassword(), publicKey));
+                } catch (Exception e) {
+                    logger.error("密码加密失败，password：{}", sysUser.getPassword(), e);
+                    return false;
+                }
+            }
+            sysUser.setLastUpdateDate(new Date());
+            userMapper.updateByPrimaryKeySelective(sysUser);
+        }
+
+        return true;
+    }
+
+    @Override
+    public Boolean delete(List<SysUser> sysUsers) {
+        for (SysUser sysUser : sysUsers) {
+            userMapper.deleteByPrimaryKey(sysUser.getId());
+        }
+        return true;
+    }
+
+    @Override
+    public List<SysUser> query(SysUser sysUser, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<SysUser> sysUsers = userMapper.select(sysUser);
+        return sysUsers;
+    }
+
+    @Override
+    public ResponseData checkPassword(SysUser sysUser) {
         String msg = "";
-        if (StringUtils.isEmpty(user.getName()) && StringUtils.isEmpty(user.getPhone())) {
+        ResponseData responseData = new ResponseData();
+        if (StringUtils.isEmpty(sysUser.getName()) && StringUtils.isEmpty(sysUser.getPhone())) {
             logger.error("用户名或手机号为空");
             msg += "用户名或手机号为空";
         } else {
 
-            User queryUser = new User();
-            queryUser.setName(user.getName());
-            queryUser.setPhone(user.getPhone());
-            queryUser = this.userMapper.selectOne(queryUser);
-            if(queryUser != null) {
-                if (StringUtils.isEmpty(user.getPassword())) {
-                    logger.error("密码为空，name：{}", user.getName());
+            SysUser querySysUser = new SysUser();
+            querySysUser.setName(sysUser.getName());
+            querySysUser.setPhone(sysUser.getPhone());
+            querySysUser = this.userMapper.selectOne(querySysUser);
+
+            if(querySysUser != null) {
+                if (StringUtils.isEmpty(sysUser.getPassword())) {
+                    logger.error("密码为空，name：{}", sysUser.getName());
                     msg += "密码为空";
                 } else {
-                    if (!StringUtils.isEmpty(queryUser.getPassword())) {
+                    if (!StringUtils.isEmpty(querySysUser.getPassword())) {
                         try {
-                            if (!user.getPassword().equals(RSAUtil.decrypt(queryUser.getPassword(), privateKey))) {
+                            if (!sysUser.getPassword().equals(RSAUtil.decrypt(querySysUser.getPassword(), privateKey))) {
                                 msg += "账号或密码错误";
+                            } else {
+                                List<SysUser> sysUsers = new ArrayList<>();
+                                sysUsers.add(querySysUser);
+                                responseData.setRows(sysUsers);
                             }
                         } catch (Exception e) {
-                            logger.error("密码解密失败，name：{}", queryUser.getName(), e);
-                            msg += "密码解密失败，name：" + queryUser.getName();
-                            return msg;
+                            logger.error("密码解密失败，name：{}", querySysUser.getName(), e);
+                            msg += "密码解密失败，name：" + querySysUser.getName();
+                            return new ResponseData(msg);
                         }
                     }
                 }
@@ -150,30 +203,37 @@ public class UserServiceImpl implements IUserService {
                 msg += "账号或密码错误";
             }
         }
-        return msg;
+        if(StringUtils.isEmpty(msg)) {
+            return responseData;
+        } else {
+            return new ResponseData(msg);
+        }
     }
 
     @Override
-    public String changPassword(User user) {
-        String msg = this.checkPassword(user);
-        if (StringUtils.isEmpty(msg)) {
-            User queryUser = this.userMapper.selectOne(user);
+    public String changPassword(SysUser sysUser) {
+        ResponseData responseData = this.checkPassword(sysUser);
+        String msg = "";
+        if (responseData.isSuccess()) {
+            SysUser querySysUser = this.userMapper.selectOne(sysUser);
             try {
-                user.setPassword(RSAUtil.encrypt(user.getNewPassword(), publicKey));
+                sysUser.setPassword(RSAUtil.encrypt(sysUser.getNewPassword(), publicKey));
             } catch (Exception e) {
-                logger.error("密码加密失败，password：{}", user.getPassword(), e);
+                logger.error("密码加密失败，password：{}", sysUser.getPassword(), e);
                 msg += "密码加密失败";
             }
-            user.setLastUpdateDate(new Date());
-            userMapper.updateByPrimaryKeySelective(queryUser);
+            sysUser.setLastUpdateDate(new Date());
+            userMapper.updateByPrimaryKeySelective(querySysUser);
+        } else {
+            responseData.setMessage(msg);
         }
         return msg;
     }
 
     @Override
-    public List<User> queryUser(String data, int page, int pageSize) {
+    public List<SysUser> queryUser(String data, int page, int pageSize) {
         PageHelper.startPage(page,pageSize);
-        Example example = new Example(User.class);
+        Example example = new Example(SysUser.class);
         if(!StringUtils.isEmpty(data)) {
             data = "%" + data + "%";
             example.createCriteria().orLike("name", data)

@@ -17,7 +17,10 @@ zuul:
   retryable: true
   routes:
     batch-service: /batch/** # 将job微服务映射到/batch/**
-    user-service: /user/**
+    user-service: /user/** # 用户中心微服务
+    auth-service: /auth/** # 授权中心微服务
+  add-host-header: true #添加请求本身的head
+  sensitive-headers: #设置敏感头为空，不过滤cookie
 ribbon:
   ConnectTimeout: 250 # 连接超时时间(ms)
   ReadTimeout: 2000 # 通信超时时间(ms)
@@ -31,3 +34,13 @@ hystrix:
         isolation:
           thread:
             timeoutInMillisecond: 10000 # 熔断超时时长：10000ms
+
+zzrq:
+  jwt:
+    cookieName: zzrq_token
+
+zzrq:
+  filter:
+    allowPaths:
+      - /api/auth
+      - /api/user

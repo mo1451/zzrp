@@ -6,8 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="auth" />
         <module name="batch" />
         <module name="common" />
+        <module name="excel" />
         <module name="gateway" />
         <module name="item_service" />
         <module name="message" />
@@ -18,10 +20,12 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="auth" target="1.8" />
       <module name="batch" target="1.8" />
       <module name="common" target="1.8" />
       <module name="demo" target="1.8" />
       <module name="durid-spring-boot-starter" target="1.8" />
+      <module name="excel" target="1.8" />
       <module name="gateway" target="1.8" />
       <module name="item" target="1.8" />
       <module name="item_interface" target="1.8" />

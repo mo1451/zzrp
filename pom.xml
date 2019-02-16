@@ -12,6 +12,8 @@
         <!--<module>starter</module>-->
         <module>Users</module>
         <module>message</module>
+        <module>auth</module>
+        <module>excel</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

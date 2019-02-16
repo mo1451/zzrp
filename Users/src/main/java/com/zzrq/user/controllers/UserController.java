@@ -2,7 +2,7 @@ package com.zzrq.user.controllers;
 
 import com.zzrq.base.dto.BaseDto;
 import com.zzrq.base.dto.ResponseData;
-import com.zzrq.user.dto.User;
+import com.zzrq.user.dto.SysUser;
 import com.zzrq.user.service.IUserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,8 +30,8 @@ public class UserController {
             @ApiImplicitParam(name = "pageSize", value = "显示个数", required = true, dataType = "int"),})
     @GetMapping("get/user")
     public ResponseData queryUser(String data, int pageNum, int pageSize) {
-        List<User> users = this.userService.queryUser(data,pageNum,pageSize);
-        return new ResponseData(users);
+        List<SysUser> sysUsers = this.userService.queryUser(data,pageNum,pageSize);
+        return new ResponseData(sysUsers);
     }
 
     /**
@@ -51,27 +51,27 @@ public class UserController {
 
     /**
      * 校验用户密码是否正确
-     * @param user
+     * @param sysUser
      * @return
      */
     @ApiOperation(value = "校验用户密码是否正确", notes = "根据用户名，手机号校验用户密码是否正确")
     @ApiImplicitParams({@ApiImplicitParam(name = "user", value = "用户dto", required = true, dataType = "User")})
     @PostMapping("/check/password")
-    public ResponseData checkUserPassword(User user) {
-        String msg = this.userService.checkPassword(user);
-        return new ResponseData(msg);
+    public ResponseData checkUserPassword(@RequestBody SysUser sysUser) {
+        ResponseData responseData = this.userService.checkPassword(sysUser);
+        return responseData;
     }
 
     /**
      * 修改密码
-     * @param user
+     * @param sysUser
      * @return
      */
     @ApiOperation(value = "修改密码", notes = "根据用户名，手机号校验用户密码是否正确，然后修改修改密码")
     @ApiImplicitParams({@ApiImplicitParam(name = "user", value = "用户dto", required = true, dataType = "User")})
     @PutMapping("/change/password")
-    public ResponseData changPassword(User user) {
-        String msg = this.userService.changPassword(user);
+    public ResponseData changPassword(SysUser sysUser) {
+        String msg = this.userService.changPassword(sysUser);
         return new ResponseData(msg);
     }
 
@@ -90,7 +90,7 @@ public class UserController {
 
     /**
      * 注册
-     * @param user
+     * @param sysUser
      * @param code
      * @return
      */
@@ -98,8 +98,62 @@ public class UserController {
     @ApiImplicitParams({@ApiImplicitParam(name = "user", value = "用户dto", required = true, dataType = "User"),
             @ApiImplicitParam(name = "code", value = "验证码", required = true, dataType = "String")})
     @PostMapping("/register")
-    public ResponseData register(@Valid User user, @RequestParam("code") String code) {
-        Boolean boo = this.userService.register(user, code);
+    public ResponseData register(@Valid SysUser sysUser, @RequestParam("code") String code) {
+        Boolean boo = this.userService.register(sysUser, code);
+        return new ResponseData(boo);
+    }
+
+    /**
+     * 查询用户
+     * @param sysUser
+     * @return
+     */
+    @ApiOperation(value = "查询用户", notes = "查询用户")
+    @ApiImplicitParams({@ApiImplicitParam(name = "user", value = "用户dto", required = true, dataType = "User"),
+            @ApiImplicitParam(name = "pageNum", value = "第几页", required = true, dataType = "int"),
+            @ApiImplicitParam(name = "pageSize", value = "显示个数", required = true, dataType = "int"),})
+    @GetMapping("query")
+    public ResponseData query(SysUser sysUser, int pageNum, int pageSize) {
+        List<SysUser> sysUsers = this.userService.query(sysUser,pageNum,pageSize);
+        return new ResponseData(sysUsers);
+    }
+
+    /**
+     * 添加用户
+     * @param sysUsers
+     * @return
+     */
+    @ApiOperation(value = "添加用户", notes = "添加用户")
+    @ApiImplicitParams({@ApiImplicitParam(name = "users", value = "用户dto", required = true, dataType = "List<User>"),})
+    @PostMapping("/add")
+    public ResponseData add(@Valid List<SysUser> sysUsers) {
+        Boolean boo = this.userService.add(sysUsers);
+        return new ResponseData(boo);
+    }
+
+    /**
+     * 修改用户
+     * @param sysUsers
+     * @return
+     */
+    @ApiOperation(value = "修改用户", notes = "修改用户")
+    @ApiImplicitParams({@ApiImplicitParam(name = "users", value = "用户dto", required = true, dataType = "List<User>"),})
+    @PutMapping("/change")
+    public ResponseData change(@Valid List<SysUser> sysUsers) {
+        Boolean boo = this.userService.change(sysUsers);
+        return new ResponseData(boo);
+    }
+
+    /**
+     * 删除用户
+     * @param sysUsers
+     * @return
+     */
+    @ApiOperation(value = "删除用户", notes = "删除用户")
+    @ApiImplicitParams({@ApiImplicitParam(name = "users", value = "用户dto", required = true, dataType = "List<User>"),})
+    @DeleteMapping("/delete")
+    public ResponseData delete(@Valid List<SysUser> sysUsers) {
+        Boolean boo = this.userService.delete(sysUsers);
         return new ResponseData(boo);
     }
 
